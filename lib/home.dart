@@ -37,6 +37,7 @@ class Home extends StatelessWidget {
                     ),
                   ),
                 ),
+                Divider(height: 75, color: Colors.black, thickness: 5.0,),
                 Row(
                   children: [
                     Icon(Icons.person,
