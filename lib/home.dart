@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int year = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('User Profile',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.teal,
         centerTitle: true,
       ),
       body: Padding(
@@ -41,7 +48,7 @@ class Home extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.person,
-                      color: Colors.white70,
+                      color: Colors.tealAccent,
                     ),
                     SizedBox(width: 3.0,),
                     Text(
@@ -65,8 +72,8 @@ class Home extends StatelessWidget {
                 SizedBox(height: 30.0),
                 Row(
                   children: [
-                    Icon(Icons.calendar_today,
-                      color: Colors.white70,
+                    Icon(Icons.calendar_month_outlined,
+                      color: Colors.tealAccent,
                     ),
                     SizedBox(width: 3.0,),
                     Text(
@@ -80,7 +87,7 @@ class Home extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Third Year',
+                  '$year Year',
                   style: TextStyle(
                     fontSize:25.0 ,
                     fontWeight: FontWeight.bold,
@@ -91,7 +98,7 @@ class Home extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.email,
-                      color: Colors.white70,
+                      color: Colors.tealAccent,
                     ),
                     SizedBox(width: 3.0,),
                     Text(
@@ -118,8 +125,19 @@ class Home extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ElevatedButton(
-                    onPressed: (){},
-                    child: Text('Add Year'),
+                  onPressed: () {
+                    setState(() {
+                      year += 1;
+                    });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  child: Text('Add Year',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                  ),
                 ),
               ],
             ),
@@ -129,3 +147,6 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+
+
