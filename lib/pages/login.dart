@@ -1,16 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<Login> createState() => _LoginState();
 }
 
-class _SignupState extends State<Signup> {
+class _LoginState extends State<Login> {
   final formKey = GlobalKey<FormState>();
-  String name = '';
   String email = '';
   String password = '';
 
@@ -24,7 +23,7 @@ class _SignupState extends State<Signup> {
           child: Column(
             children: <Widget>[
               Text(
-                'Let\'s Get Started!',
+                'Log In',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   letterSpacing: 2.0,
@@ -37,29 +36,6 @@ class _SignupState extends State<Signup> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        label: Text('Name'),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please provide a name';
-                        }
-                        if (value.length < 2) {
-                          return 'Name should be at least 3 letters long';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        name = value!;
-                      },
-                    ),
-                    SizedBox(height: 20.0),
                     TextFormField(
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
@@ -109,13 +85,13 @@ class _SignupState extends State<Signup> {
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           formKey.currentState!.save();
-                          print(name);
                           print(email);
                           print(password);
+                          // Add login logic here
                         }
                       },
                       child: Text(
-                        'Sign Up',
+                        'Log In',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -135,7 +111,7 @@ class _SignupState extends State<Signup> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            'Or Sign Up using',
+                            'Or Log In using',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.grey,
@@ -152,7 +128,7 @@ class _SignupState extends State<Signup> {
                     SizedBox(height: 20.0),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Handle Google sign up
+                        // Handle Google login
                       },
                       icon: Icon(
                         Icons.account_circle,
@@ -173,7 +149,7 @@ class _SignupState extends State<Signup> {
                     SizedBox(height: 10.0),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Handle Facebook sign up
+                        // Handle Facebook login
                       },
                       icon: Icon(
                         Icons.facebook,
@@ -189,18 +165,18 @@ class _SignupState extends State<Signup> {
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: 'Already have an account? ',
+                          text: "Don't have an account? ",
                           style: TextStyle(color: Colors.black),
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Login here',
+                              text: 'Sign up here',
                               style: TextStyle(
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.w600,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushNamed(context, '/login');
+                                  Navigator.pushNamed(context, '/signup');
                                 },
                             ),
                           ],
