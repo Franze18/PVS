@@ -7,7 +7,7 @@ import 'package:untitled/pages/login.dart';
 
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
-  initialRoute: '/signup',
+  initialRoute: '/menu',
   routes: {
     '/' : (context) => Dashboard(),
     '/menu' : (context) => Menu(),
