@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:untitled/pages/selectedProduct.dart';
 import 'package:untitled/services/product.dart';
 import 'package:untitled/services/menuCard.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,7 @@ class _MenuState extends State<Menu> {
 
   Future<List<dynamic>> fetchData() async {
     final response =
-        await http.get(Uri.parse('http://192.168.192.197:8080/products'));
+    await http.get(Uri.parse('http://192.168.192.197:8080/products'));
     final data = jsonDecode(response.body);
     List products = <Product>[];
     for (var product in data) {
@@ -64,26 +65,30 @@ class _MenuState extends State<Menu> {
               return Padding(
                 padding: EdgeInsets.all(3.0),
                 child: ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (context, index){
-                    return Card(
-                      color: Colors.amberAccent,
-                      child: ListTile(
-                        title: Column(
-                          children: [
-                            Text(products[index].productName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                              ),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: Colors.amberAccent,
+                        child: ListTile(
+                            title: Column(
+                              children: [
+                                Text(products[index].productName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                                Text(products[index].price.toString())
+                              ],
                             ),
-                            Text(products[index].price.toString())
-                          ],
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => selectedProduct(product: products[index]),
+                                )
+                              );
+                            }
                         ),
-                        onTap: (){},
-                      ),
-                    );
-                  }
+                      );
+                    }
                 ),
               );
             }

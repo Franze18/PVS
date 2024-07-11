@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled/services/User.dart';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -13,6 +15,17 @@ class _SignupState extends State<Signup> {
   String name = '';
   String email = '';
   String password = '';
+
+  CreateAccount (User user)async{
+    final response = await http.post(
+      Uri.parse('http://192.168.192.197:8080/'),
+      headers : <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: user.toJson(),
+    );
+    print(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +123,8 @@ class _SignupState extends State<Signup> {
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           formKey.currentState!.save();
-                          print(name);
-                          print(email);
-                          print(password);
+                          User user = User(username: name, email: email, password: password);
+                          CreateAccount(user);
                         }
                       },
                       child: Text(
