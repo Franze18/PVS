@@ -11,7 +11,6 @@ void main() => runApp(MaterialApp(
   initialRoute: '/login',
   routes: {
     '/' : (context) => Dashboard(),
-    '/menu' : (context) => Menu(),
     '/login' : (context) => Login(),
     '/profile' : (context) => Home(),
     '/signup' : (context) => Signup(),
