@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/home.dart';
+import 'package:untitled/pages/dashboard.dart';
+import 'package:untitled/pages/menu.dart';
+import 'package:untitled/pages/selectedProduct.dart';
+import 'package:untitled/pages/signup.dart';
+import 'package:untitled/pages/login.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('PVS App'),
-        ),
-        backgroundColor: Colors.lightBlue[700],
-      ),
-      body: Center(
-        child: Image.network('https://img.offers-cdn.net/assets/uploads/offers/za/13373512/baby-clothes-large.jpeg')
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        backgroundColor: Colors.orange[700],
-        child: Icon(
-            Icons.add,
-            color: Colors.brown[700],
-        ),
-      ),
-    ),
-  ));
-}
+void main() => runApp(MaterialApp(
+  debugShowCheckedModeBanner: false,
+  initialRoute: '/login',
+  routes: {
+    '/' : (context) => Dashboard(),
+    '/menu' : (context) => Menu(),
+    '/login' : (context) => Login(),
+    '/profile' : (context) => Home(),
+    '/signup' : (context) => Signup(),
+  },
+));
+
+
+
