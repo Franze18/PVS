@@ -1,102 +1,102 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:untitled/pages/selectedProduct.dart';
 import 'package:untitled/services/product.dart';
-import 'package:untitled/services/menuCard.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class Menu extends StatefulWidget {
-  const Menu({super.key});
+class SelectedProduct extends StatefulWidget {
+  final Product product;
+  const SelectedProduct({super.key, required this.product});
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<SelectedProduct> createState() => _SelectedProductState(product: product);
 }
 
-class _MenuState extends State<Menu> {
-  late Future<List<dynamic>> products;
-
-  Future<List<dynamic>> fetchData() async {
-    final response =
-    await http.get(Uri.parse('http://192.168.0.141:8080/api/v1/products/all'));
-    final data = jsonDecode(response.body);
-    List products = <Product>[];
-    for (var product in data) {
-      products.add(Product.fromJson(product));
-    }
-    return products;
-  }
+class _SelectedProductState extends State<SelectedProduct> {
+  final Product product;
+  late double totalAmount;
+  int numberOfOrders = 1;
+  _SelectedProductState({required this.product});
 
   @override
   void initState() {
     super.initState();
-    products = fetchData();
+    totalAmount = product.price;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Menu',
+          'Order',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: FutureBuilder(
-          future: products,
-          builder: (context, snapshots) {
-            if (snapshots.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: SpinKitFoldingCube(
-                  color: Colors.amberAccent,
-                  size: 60.0,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              SizedBox(height: 20.0),
+              Text(
+                widget.product.productName,
+                style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              Text(widget.product.description),
+              SizedBox(height: 20.0),
+              Image.network(
+                widget.product.url, // Assuming your Product model has an imageUrl field
+                fit: BoxFit.cover,
+                height: 200.0,
+                width: double.infinity,
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Php. ${totalAmount.toString()}',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
-              );
-            }
-            if (snapshots.hasData) {
-              List products = snapshots.data!;
-              return Padding(
-                padding: EdgeInsets.all(3.0),
-                child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        color: Colors.amberAccent,
-                        child: ListTile(
-                            title: Column(
-                              children: [
-                                Text(products[index].productName,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                  ),
-                                ),
-                                Text(products[index].price.toString())
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => selectedProduct(product: products[index]),
-                                )
-                              );
-                            }
-                        ),
-                      );
-                    }
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (numberOfOrders > 1) {
+                            numberOfOrders -= 1;
+                            totalAmount = product.price * numberOfOrders;
+                          }
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                    Text(
+                      numberOfOrders.toString(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          numberOfOrders += 1;
+                          totalAmount = product.price * numberOfOrders;
+                        });
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ],
                 ),
-              );
-            }
-            return Center(
-              child: Text('Unable to load data'),
-            );
-          },
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
