@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:untitled/services/User.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,6 +16,62 @@ class _LoginState extends State<Login> {
   final formKey = GlobalKey<FormState>();
   String email = '';
   String password = '';
+  bool _obscure = true;
+  IconData _obscureIcon = Icons.visibility_off;
+  bool _isLoading = false;
+
+  Future<bool> login(User user) async {
+    final response = await http.post(
+      Uri.parse('http://192.168.0.141:8080/api/v1/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'usernameOrEmail': user.username,
+        'password': user.password
+      }),
+    );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  void _toggleObscure() {
+    setState(() {
+      _obscure = !_obscure;
+      _obscureIcon = _obscure ? Icons.visibility_off : Icons.visibility;
+    });
+  }
+
+  void _submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      User user = User(
+        username: email,
+        email: '',
+        password: password,
+      );
+      setState(() {
+        _isLoading = true;
+      });
+      bool isLoggedIn = await login(user);
+      setState(() {
+        _isLoading = false;
+      });
+      if (isLoggedIn) {
+        print('Login successful');
+        Navigator.pushReplacementNamed(context, '/');
+      } else {
+        print('Login failed');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed. Please try again.')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +117,16 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
-                      obscureText: true,
+                      obscureText: _obscure,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.security),
                         label: Text('Password'),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscureIcon),
+                          onPressed: _toggleObscure,
                         ),
                       ),
                       validator: (value) {
@@ -83,21 +147,8 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(height: 25.0),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/');
-                        if (formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
-                          print(email);
-                          print(password);
-                          // Add login logic here
-                        }
-                      },
-                      child: Text(
-                        'Log In',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      onPressed: _isLoading ? null : _submitForm,
+                      child: _isLoading ? CircularProgressIndicator() : Text('Log In'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amberAccent,
                         foregroundColor: Colors.black,

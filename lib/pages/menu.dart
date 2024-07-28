@@ -19,7 +19,7 @@ class _MenuState extends State<Menu> {
 
   Future<List<dynamic>> fetchData() async {
     final response =
-    await http.get(Uri.parse('http://192.168.192.197:8080/products'));
+    await http.get(Uri.parse('http://192.168.0.141:8080/api/v1/products/all'));
     final data = jsonDecode(response.body);
     List products = <Product>[];
     for (var product in data) {

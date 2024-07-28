@@ -19,8 +19,16 @@ class Menucard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(product.productName, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
-              Text("${product.price}", style: TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.bold)),
+              Text(product.productName,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold)),
+              Text("${product.price}",
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/services/User.dart';
@@ -15,14 +16,20 @@ class _SignupState extends State<Signup> {
   String name = '';
   String email = '';
   String password = '';
+  bool _obscure = true;
+  IconData _obscureIcon = Icons.visibility_off;
 
-  CreateAccount (User user)async{
+  CreateAccount(User user) async {
     final response = await http.post(
-      Uri.parse('http://192.168.192.197:8080/'),
-      headers : <String, String>{
+      Uri.parse('http://192.168.0.141:8080/api/v1/register/user'),
+      headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
-      body: user.toJson(),
+      body: jsonEncode(<String, dynamic>{
+        'username': user.username,
+        'email': user.email,
+        'password': user.password
+      }),
     );
     print(response.body);
   }
@@ -94,12 +101,21 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
-                      obscureText: true,
+                      obscureText: _obscure,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.security),
                         label: Text('Password'),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscureIcon),
+                          onPressed: () {
+                            setState(() {
+                              _obscure = !_obscure;
+                              _obscureIcon = _obscure ? Icons.visibility_off : Icons.visibility;
+                            });
+                          },
                         ),
                       ),
                       validator: (value) {
@@ -124,6 +140,7 @@ class _SignupState extends State<Signup> {
                         if (formKey.currentState!.validate()) {
                           formKey.currentState!.save();
                           User user = User(username: name, email: email, password: password);
+                          print('Created account for: ${user.username}, ${user.email}');
                           CreateAccount(user);
                         }
                       },

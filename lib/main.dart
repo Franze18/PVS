@@ -10,9 +10,9 @@ void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   initialRoute: '/login',
   routes: {
-    '/login' : (context) => Login(),
     '/' : (context) => Dashboard(),
     '/menu' : (context) => Menu(),
+    '/login' : (context) => Login(),
     '/profile' : (context) => Home(),
     '/signup' : (context) => Signup(),
   },
